@@ -1,0 +1,21 @@
+{
+  "name": "my-script",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "lh-helper": "./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "browser-sync": "^3.0.3",
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.4.7",
+    "fast-glob": "^3.3.3",
+    "inquirer": "^12.4.2",
+    "nanospinner": "^1.2.2",
+    "yargs": "^17.7.2"
+  }
+}

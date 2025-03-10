@@ -1,0 +1,7 @@
+# log files and vscode files
+*.log
+*.vscode
+
+# packages and dependencies
+node_modules
+.env
