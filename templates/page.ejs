@@ -1,0 +1,13 @@
+{{ assign $site.title = 'ニュース | ' . $site.title }}
+{{ assign $site.description = 'ニュース | ' . $site.description }}
+{{ assign $site.url = '<%= url %>' }}
+
+{{ transclude '<%= '../'.repeat(relativePathCount) %>template/siteframe' }}
+
+{{ section contents }}
+
+<div class="<%= className %>">
+    <!-- Add your content here -->
+</div>
+
+{{ end section contents }}
