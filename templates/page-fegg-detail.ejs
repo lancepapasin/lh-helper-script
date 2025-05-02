@@ -1,0 +1,13 @@
+{{ assign $site.title = $page.data.title . '新しいページ | ' . $site.title }}
+{{ assign $site.description = $page.data.title . '新しいページの説明 | ' . $site.description }}
+{{ assign $site.url = '<%= url %>' . $page.data[$page.id] . '.html' }}
+
+{{ transclude '<%= '../'.repeat(relativePathCount) %>template/siteframe' }}
+
+{{ section contents }}
+
+<div class="p-<%= className %>-detail">
+    <!-- Add your content here -->
+</div>
+
+{{ end section contents }}
