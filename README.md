@@ -1,13 +1,17 @@
 # Lion Heart Helper Script
 
-This script is created to automate the development of LH projects to improve workflow and process.
+This script is created to automate the development of LH projects which streamline workflow,  process and reduce boilerplates.
 
 ## How to setup?
-First you need to install the packages used by the script
+First you need to clone the repository on your local machine
+```
+git clone https://github.com/lancepapasin/lh-helper-script.git
+```
+Install the packages used by the script by running
 ```
 npm install
 ```
-Since this project is not yet deployed and is currently an expirement, install it on the device by running
+Since this project is not yet deployed and is currently an experiment, install it on the device by running
 ```
 npm install . -g
 ```
