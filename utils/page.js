@@ -122,6 +122,10 @@ class FeggPage extends PageHelper {
       ignore: ["**/cms/**"],
     });
     // Folder paths
+    const cms = this._getFgPath({
+      pattern: "**/code/application/cms",
+      onlyDir: true,
+    });
     const controller = this._getFgPath({
       pattern: "**/code/application",
       onlyDir: true,
@@ -141,12 +145,14 @@ class FeggPage extends PageHelper {
     });
     const ejs = path.resolve(__dirname, "../templates");
 
-    return { routes, style, controller, template, views, scss, ejs };
+    return { routes, style, cms, controller, template, views, scss, ejs };
   }
 
   _initVariables() {
     let variables = {
-      route: `$route['${this.absolutePath}/'] = 'page/render/${this.absolutePath}/index';`,
+      route: !this.option.withCmsController
+        ? `$route['${this.absolutePath}/'] = 'page/render/${this.absolutePath}/index';`
+        : `$route['${this.absolutePath}/post_:num.html'] = '${this.absolutePath}/detail/$1';`,
       style: {
         index: `@import "object/project/${this.absolutePath}/index";`,
         detail: `@import "object/project/${this.absolutePath}/detail";`,
@@ -157,8 +163,9 @@ class FeggPage extends PageHelper {
   }
 
   _generateBoilerPlatePaths() {
-    const { controller, template, views, scss } = this.paths;
+    const { cms, controller, template, views, scss } = this.paths;
     let selected = {
+      cms,
       controller,
       template: path.join(template, this.absolutePath),
       scss: path.join(scss, this.absolutePath),
@@ -186,7 +193,9 @@ class FeggPage extends PageHelper {
 
     if (
       typeof this.option.withController === "undefined" ||
-      this.option.withController != true
+      typeof this.option.withCmsController === "undefined" ||
+      this.option.withController != true ||
+      this.option.withCmsController != true
     ) {
       files = [
         ...files,
@@ -203,10 +212,13 @@ class FeggPage extends PageHelper {
   }
 
   async _generateEjsFiles() {
+    const isCmsPage = this.option.withController || this.option.withCmsController
+
     const pageArgs = {
       url: `${this.absolutePath}/`,
       relativePathCount: this.absolutePath.split("/").length,
       className: this.pagename.replace(" ", "-"),
+      isDetail: isCmsPage,
     };
 
     let ejsFileArgs = [
@@ -220,11 +232,14 @@ class FeggPage extends PageHelper {
         key: "scss",
         template: "page-style.ejs",
         filename: "_index.scss",
-        args: { className: this.pagename.replace(" ", "-") },
+        args: {
+          styleClass: this.pagename.replace(" ", "-"),
+          isDetail: this.option.withController || false,
+        },
       },
     ];
 
-    if (this.option.withController) {
+    if (this.option.withController || this.option.withCmsController) {
       ejsFileArgs = [
         ...ejsFileArgs,
         {
@@ -235,17 +250,21 @@ class FeggPage extends PageHelper {
             name: this._toSentenceCase(this.pagename),
           },
         },
+      ];
+    }
+
+    if (this.option.withCmsController) {
+      ejsFileArgs = [
+        ...ejsFileArgs,
         {
-          key: "template",
-          template: "page-fegg-detail.ejs",
-          filename: "detail.tpl",
-          args: pageArgs,
-        },
-        {
-          key: "scss",
-          template: "page-style-detail.ejs",
-          filename: "_detail.scss",
-          args: { className: this.pagename.replace(" ", "-") },
+          key: "cms",
+          template: "page-cms-controller.ejs",
+          filename: `${this._toSentenceCase(this.pagename)}.php`,
+          args: {
+            name: this._toSentenceCase(this.pagename),
+            hasGalleries: true,
+            columns: ['foo', 'bar']
+          },
         },
       ];
     }

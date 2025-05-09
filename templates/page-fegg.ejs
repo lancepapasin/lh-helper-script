@@ -1,12 +1,18 @@
-{{ assign $site.title = '新しいページ | ' . $site.title }}
-{{ assign $site.description = '新しいページの説明 | ' . $site.description }}
-{{ assign $site.url = '<%= url %>' }}
+<% 
+    const pageClass = !isDetail ?  `p-${className}` : `p-${className}-detail`;
+    const siteTitle = !isDetail ? `'新しいページ | '` : `$page.data.title . '新しいページ | '`;
+    const siteDescription = !isDetail ? `'新しいページの説明 | '` : `$page.data.description . '新しいページの説明 | '`;
+    const siteUrl = !isDetail ? `'${url}'` : `'${url}' . $page.data[$page.id]`;
+-%>
+{{ assign $site.title = <%- siteTitle %> . $site.title }}
+{{ assign $site.description = <%- siteDescription %> . $site.description}}
+{{ assign $site.url = <%-siteUrl %> }}
 
 {{ transclude '<%= '../'.repeat(relativePathCount) %>template/siteframe' }}
 
 {{ section contents }}
 
-<div class="p-<%= className %>">
+<div class="<%= pageClass %>">
     <!-- Add your content here -->
 </div>
 

@@ -69,7 +69,7 @@ class <%= name %> extends MyApplication
                     ->listMax($listMax)
                     ->current($this->in('p'))
                     ->order('post_date', 'desc')
-                    ->order('news_id', 'desc')
+                    ->order('<%= name.toLowerCase() %>_id', 'desc')
                     ->find();
 
             // ページャーのデータを取得

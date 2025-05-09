@@ -1,3 +1,6 @@
-.p-<%= className %> {
+<% 
+    const className = !isDetail ?  `p-${styleClass}` : `p-${styleClass}-detail`;
+-%>
+.<%= className %> {
     display: block;
 }
