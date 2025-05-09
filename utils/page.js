@@ -47,6 +47,19 @@ class PageHelper {
     return result;
   }
 
+  _getUntrackedSegment(paths) {
+    const result = [];
+
+    for (const path of paths) {
+      if (fs.existsSync(path) && fs.statSync(path).isDirectory()) {
+        continue;
+      } else {
+        result.push(path);
+      }
+    }
+    return result;
+  }
+
   _readFiles(base, files) {
     return Promise.all(
       files.map((filename) => {
@@ -85,6 +98,9 @@ class PageHelper {
   }
 }
 
+// TODO: add support for --with-cms-controller flag
+//    this should create controller on code/application/cms/
+//    this should insert the cms menu on /cms dashboard
 class FeggPage extends PageHelper {
   constructor(pagename, option = {}) {
     super(pagename);
@@ -138,24 +154,6 @@ class FeggPage extends PageHelper {
     };
 
     return variables;
-  }
-
-  _getUntrackedSegment() {
-    const paths = this._splitPathIntoSegments(
-      this.paths.template,
-      this.absolutePath
-    ).slice(0, -1);
-
-    const result = [];
-
-    for (const path of paths) {
-      if (fs.existsSync(path) && fs.statSync(path).isDirectory()) {
-        continue;
-      } else {
-        result.push(path);
-      }
-    }
-    return result;
   }
 
   _generateBoilerPlatePaths() {
@@ -288,7 +286,13 @@ class FeggPage extends PageHelper {
   async create() {
     try {
       if (this._splitPathIntoSegments("", this.absolutePath).length > 1) {
-        const untracked = this._getUntrackedSegment();
+        const splittedPaths = this._splitPathIntoSegments(
+          this.paths.template,
+          this.absolutePath
+        ).slice(0, -1);
+
+        const untracked = this._getUntrackedSegment(splittedPaths);
+
         if (untracked.length > 0)
           throw new Error(
             `trying to add page ${
@@ -354,6 +358,8 @@ class FeggPage extends PageHelper {
     }
   }
 }
+
+// TODO: WpPage class for adding pages on Wordpress project
 
 module.exports = {
   FeggPage,
