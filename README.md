@@ -28,4 +28,4 @@ currently the script has few commands to run during development
 | `start <project>` | Watch and run the selected project. |
 | `add:page <pagename>` | Setups a new page on the project. <br> <sub>_This is currently on `feature/add-page` branch_<sub> |
 
-This tool is developed and maintained by Lance.
+This tool is developed and maintained by Lance...
